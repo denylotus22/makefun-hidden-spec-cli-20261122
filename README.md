@@ -16,8 +16,21 @@ dependencies, deterministic output.
 ## Run it
 
 ```sh
-node main.ts patch.diff
+node main.ts patch.diff                 # apply a patch file
+node main.ts < patch.diff               # or read the patch from stdin
+node main.ts --check patch.diff         # dry run: report, write nothing
+node main.ts --strict patch.diff        # exact matching only (tier 0)
+node main.ts --format=unified patch.diff  # force one format: auto (default),
+                                          # unified, search-replace, v4a, json
 ```
+
+The patch is read in one of four formats — unified diff, SEARCH/REPLACE
+blocks, V4A patches, or JSON tool calls — detected automatically. Each edit is
+matched at the first of three tiers (exact, trailing whitespace, leading and
+trailing whitespace), so drifted indentation still lands; if any edit fails,
+nothing is written and every failure is reported. Exit codes: 0 applied,
+1 some edit failed, 2 usage / unreadable patch / no format detected / parse
+error.
 
 ---
 
